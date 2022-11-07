@@ -18,7 +18,7 @@ Requisições: Utilizam a biblioteca _requests_
 
 Trabalhando com o JSON:  
 [Python Create JSON](https://pythonexamples.org/python-create-json/)  
-[Working with JSON in Python](https://datagy.io/python-requests-json/)
+[Working with JSON in Python](https://datagy.io/python-requests-json/)  
 [Parse a JSON response using Python requests library](https://pynative.com/parse-json-response-using-python-requests-library/)
 
 ## Interface
