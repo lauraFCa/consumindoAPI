@@ -30,7 +30,7 @@ class ServerMethods:
         if r.status_code == 200:
             return r.json()
         else:
-            return 'Request Fail' + r.content
+            return 'Request Fail'
 
 
     def getPersonId(self):
@@ -40,7 +40,7 @@ class ServerMethods:
             string: identificador
         """
         resp = self.getPersonBasicInfo()
-        return resp["id"]
+        return resp
     
 
     def requestPOST(self, conteudo, descricao, url, tituloUrl):

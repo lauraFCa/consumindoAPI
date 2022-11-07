@@ -1,7 +1,7 @@
 # Consumindo API do LinkedIn com Python
 
 Requisições com a biblioteca _requests_  
-Interface utilizando o TKinter
+Interface utilizando o PyQt6
 
 ## LinkedIn
 
@@ -23,21 +23,27 @@ Trabalhando com o JSON:
 
 ## Interface
 
-TKinter - Já vem instalado no Python
+PyQt6: Biblioteca para construção de interfaces gráficas com Python
 
-[Documentação](https://docs.python.org/3/library/tkinter.html)  
-[CRIE O PRIMEIRO APLICATIVO GUI USANDO PYTHON-TKINTER](https://acervolima.com/crie-o-primeiro-aplicativo-gui-usando-python-tkinter/)  
-[Create UI in Python-Tkinter](https://www.tutorialsteacher.com/python/create-gui-using-tkinter-python)
+`pip install pyqt6`
+
+**Referências:**  
+[Python and PyQt: Building a GUI Desktop Calculator](https://realpython.com/python-pyqt-gui-calculator/)
 
 ## Pacotes
 
 | Package            | Version   |
 | ------------------ | --------- |
+| autopep8           | 2.0.0     |
 | certifi            | 2022.9.24 |
 | charset-normalizer | 2.1.1     |
 | idna               | 3.4       |
 | pip                | 22.3      |
+| pycodestyle        | 2.9.1     |
+| PyQt6              | 6.4.0     |
+| PyQt6-Qt6          | 6.4.0     |
+| PyQt6-sip          | 13.4.0    |
 | requests           | 2.28.1    |
 | setuptools         | 65.5.0    |
+| tomli              | 2.0.1     |
 | urllib3            | 1.26.12   |
-| yapf               | 0.32.0    |
