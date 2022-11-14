@@ -1,8 +1,6 @@
 import json
 import sys
-
 from PyQt6.QtWidgets import QApplication, QLabel, QWidget
-
 from Layouts import Layouts
 from server import ServerMethods
 

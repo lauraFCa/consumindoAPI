@@ -37,25 +37,19 @@ PyQt6: Biblioteca para construção de interfaces gráficas com Python
 
 | Package            | Version   |
 | ------------------ | --------- |
-| autopep8           | 2.0.0     |
-| certifi            | 2022.9.24 |
-| charset-normalizer | 2.1.1     |
-| idna               | 3.4       |
 | pip                | 22.3      |
-| pycodestyle        | 2.9.1     |
 | PyQt6              | 6.4.0     |
 | PyQt6-Qt6          | 6.4.0     |
 | PyQt6-sip          | 13.4.0    |
 | requests           | 2.28.1    |
-| setuptools         | 65.5.0    |
-| tomli              | 2.0.1     |
-| urllib3            | 1.26.12   |
 
 ## Sistema desenvolvido
 
-![Sistema desenvolvido](imgs/integracaoSft.png)
-
 Para usar o sistema é necessário já ter um token de autenticação para API do LinkedIn.  
+Também é necessário instalar as bibliotecas *requests* e *pyqt6*
+
+**Para executar, basta rodar apenas o arquivo *Janelas.py***
+
 As ações disponiveis são as autorizadas pela API do LinkedIn:  
 ![LinkedIn API](imgs/linkedinProducts.png)
 
@@ -71,3 +65,6 @@ Os escopos são: Obter os dados do usuário autenticado e Criar uma nova publica
 
 **Publicação com Link**  
 ![Simples](imgs/linkPub.png)
+
+Prints do Sistema:  
+![Sistema desenvolvido](imgs/integracaoSft.png)

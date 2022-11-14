@@ -1,7 +1,6 @@
 import requests
 import json
 
-
 class ServerMethods:
 
     def __init__(self, URL, token):
