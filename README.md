@@ -28,6 +28,7 @@ PyQt6: Biblioteca para construção de interfaces gráficas com Python
 `pip install pyqt6`
 
 **Referências:**  
+[Creating your first app with PyQt6](https://www.pythonguis.com/tutorials/pyqt6-creating-your-first-window/)  
 [Python and PyQt: Building a GUI Desktop Calculator](https://realpython.com/python-pyqt-gui-calculator/)
 
 ## Pacotes

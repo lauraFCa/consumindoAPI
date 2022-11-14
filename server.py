@@ -1,10 +1,14 @@
 import requests
+import json
+
 
 class ServerMethods:
 
     def __init__(self, URL, token):
         self.URL = URL
         self.token = token
+        self.userId = self.getPersonId()
+        self.asset, self.uploadUrl = "", ""
 
 
     def getPersonFullInfo(self):
@@ -13,9 +17,11 @@ class ServerMethods:
         Returns:
             json: informacoes sobre o usuario no formato Json
         """
-        authHeader = {"Authorization": "Bearer "+ self.token}
-        extraInfo = {"projection": "(id,firstName,lastName,profilePicture(displayImage~:playableStreams))"}
-        r = requests.get(url = self.URL + "/me", headers=authHeader, params=extraInfo)
+        authHeader = {"Authorization": "Bearer " + self.token}
+        extraInfo = {
+            "projection": "(id,firstName,lastName,profilePicture(displayImage~:playableStreams))"}
+        r = requests.get(url=self.URL + "/me",
+                         headers=authHeader, params=extraInfo)
         return r.json()
 
 
@@ -25,8 +31,8 @@ class ServerMethods:
         Returns:
             json: informacoes sobre o usuario no formato Json
         """
-        authHeader = {"Authorization": "Bearer "+ self.token}
-        r = requests.get(url = self.URL + "/me", headers=authHeader)
+        authHeader = {"Authorization": "Bearer " + self.token}
+        r = requests.get(url=self.URL + "/me", headers=authHeader)
         if r.status_code == 200:
             return r.json()
         else:
@@ -40,50 +46,175 @@ class ServerMethods:
             string: identificador
         """
         resp = self.getPersonBasicInfo()
-        return resp
-    
+        resp = json.dumps(resp, indent=4)
+        resp = json.loads(resp)
+        return resp["id"]
 
-    def requestPOST(self, conteudo, descricao, url, tituloUrl):
+
+    def postSimple(self, conteudo, visibility):
         """Realiza uma postagem de conteudo no perfil do usuario autenticado
 
         Args:
             conteudo (string): Conteudo principal do post
-            descricao (string): Continuacao do conteudo - breve descricao
-            url (string): URL para redirecionar a alguma outra pagina
-            tituloUrl (string): Titulo da URL adicionada
-
+            visibility (string): Publico ou Apenas para conexoes
         Returns:
-            json: Corpo da resposta (contem apenas o ID da publicacao)
+            r: Resposta completa da requisicao
         """
-        authHeader = {"Authorization": "Bearer "+ self.token}
-        personId = self.getPersonId()
+        authHeader = {"Authorization": "Bearer " + self.token}
         postBody = {
-                "author": "urn:li:person:"+personId,
+            "author": "urn:li:person:"+str(self.userId),
+            "lifecycleState": "PUBLISHED",
+            "specificContent": {
+                "com.linkedin.ugc.ShareContent": {
+                    "shareCommentary": {
+                        "text": conteudo
+                    },
+                    "shareMediaCategory": "NONE"
+                }
+            },
+            "visibility": {
+                "com.linkedin.ugc.MemberNetworkVisibility": visibility
+            }
+        }
+        r = requests.post(self.URL + "/ugcPosts", headers=authHeader, json=postBody)
+        if (r.status_code != 201):
+            print("Erro: " + r.text)
+            return "Erro: " + str(r.text)
+        else:
+            jsonSaida = r.json()
+            return jsonSaida["id"]
+
+
+    def postArticle(self, conteudo, visibility, articleText, articleUrl, linkText="link text"):
+        """Realiza uma postagem de conteudo no perfil do usuario autenticado
+
+        Args:
+            conteudo (string): Conteudo principal do post
+            visibility (string): Publico ou Apenas para conexoes
+            articleText (string): Texto principal do link - manchete
+            articleUrl (string): URL que direciona a outra pagina
+            linkText (string): Texto aternativo para a URL
+        Returns:
+            r: Resposta completa da requisicao
+        """
+        authHeader = {"Authorization": "Bearer " + self.token}
+        postBody = {
+            "author": "urn:li:person:"+str(self.userId),
+            "lifecycleState": "PUBLISHED",
+            "specificContent": {
+                "com.linkedin.ugc.ShareContent": {
+                    "shareCommentary": {
+                        "text": conteudo
+                    },
+                    "shareMediaCategory": "ARTICLE",
+                    "media": [
+                        {
+                            "status": "READY",
+                            "description": {
+                                "text": articleText
+                            },
+                            "originalUrl": articleUrl,
+                            "title": {
+                                "text": linkText
+                            }
+                        }
+                    ]
+                }
+            },
+            "visibility": {
+                "com.linkedin.ugc.MemberNetworkVisibility": visibility
+            }
+        }
+        r = requests.post(self.URL + "/ugcPosts", headers=authHeader, json=postBody)
+        if (r.status_code != 201):
+            return "Erro: " + r.text
+        else:
+            jsonSaida = r.json()
+            return jsonSaida["id"]
+
+
+    def registrarImagem(self):
+        authHeader = {"Authorization": "Bearer " + self.token}
+        postBody = {
+            "registerUploadRequest": {
+                "recipes": [
+                    "urn:li:digitalmediaRecipe:feedshare-image"
+                ],
+                "owner": "urn:li:person:" + str(self.userId),
+                "serviceRelationships": [
+                    {
+                        "relationshipType": "OWNER",
+                        "identifier": "urn:li:userGeneratedContent"
+                    }
+                ]
+            }
+        }
+        extraInfo = {"action": "registerUpload"}
+        r = requests.post(self.URL + "/assets", params=extraInfo,
+                          headers=authHeader, json=postBody)
+        jsonRetorno = r.json()
+        jsonRetorno = json.dumps(jsonRetorno)
+        jsonRetorno = json.loads(jsonRetorno)
+        if (r.status_code == 200):
+            value = jsonRetorno["value"]
+            self.asset = value["asset"]
+            self.uploadUrl = jsonRetorno["value"]["uploadMechanism"][
+                "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"]["uploadUrl"]
+            return "Success"
+        else:
+            return "registrarImagem Erro: " + str(r.status_code) + " - " + jsonRetorno["message"]
+
+
+    def postImagem(self, imgPath):
+        r = self.registrarImagem()
+        if ("Erro" in r):
+            return r
+        else:
+            authHeader = {"Authorization": "Bearer " + self.token}
+            with open(imgPath, 'rb') as f:
+                data = f.read()
+            r = requests.put(self.uploadUrl, headers=authHeader, data=data)
+            if (r.status_code == 201):
+                return "Success"
+            else:
+                return "Erro: " + str(r.status_code) + r.text
+
+
+    def postComImagem(self, imgPath, conteudo, visibility, altImg, mediaTxt):
+        authHeader = {"Authorization": "Bearer " +
+                      self.token, 'Content-Type': 'application/json'}
+        saida = self.postImagem(imgPath)
+        if ("Erro" in saida):
+            return saida
+        else:
+            postBody = {
+                "author": "urn:li:person:"+str(self.userId),
                 "lifecycleState": "PUBLISHED",
                 "specificContent": {
                     "com.linkedin.ugc.ShareContent": {
                         "shareCommentary": {
                             "text": conteudo
                         },
-                        "shareMediaCategory": "ARTICLE",
-                        "media": [
-                            {
-                                "status": "READY",
-                                "description": {
-                                    "text": descricao
-                                },
-                                "originalUrl": url,
-                                "title": {
-                                    "text": tituloUrl
-                                }
-                            }
-                        ]
-                    }
+                        "shareMediaCategory": "IMAGE",
+                        "media": [{"status": "READY",
+                                   "description": {
+                                       "text": altImg
+                                   },
+                                   "media": self.asset,
+                                   "title": {
+                                       "text": mediaTxt
+                                   }
+                                   }]}
                 },
                 "visibility": {
-                    "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
+                    "com.linkedin.ugc.MemberNetworkVisibility": visibility
                 }
-        }
-        r = requests.post(url = self.URL + "/ugcPosts", headers=authHeader, data=postBody)
-        return r.json()
-
+            }
+            print('BODY - ', json.dumps(postBody, indent=4))
+            r = requests.post(self.URL + "/ugcPosts",
+                              headers=authHeader, json=postBody)
+            if (r.status_code != 201):
+                return "Erro: " + r.text
+            else:
+                jsonSaida = r.json()
+                return jsonSaida["id"]
