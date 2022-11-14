@@ -312,8 +312,7 @@ class Layouts:
 
     # endregion
 
-    # region Janela de Publicacoes
-
+    #region Janela de Publicacoes
     def setarPubLayout(self, thisWindow, getDataAndPost, voltar):
         """Layout da janela de Publicacoes
 
@@ -404,6 +403,7 @@ class Layouts:
 
         thisWindow.setLayout(self.formLayout)
 
+
     def selecionado(self, index):
         """Identifica a visibilidade do post selecionado
 
@@ -415,11 +415,13 @@ class Layouts:
         if (index == 0):
             self.selectedVisibility = "PUBLIC"
 
+
     def loadSimpleFields(self):
         """(Postagem Simnples) Adiciona campos necessarios e desabilita os outros radio buttons
         """
         self.radio2.setCheckable(False)
         self.radio3.setCheckable(False)
+
 
     def loadArtigoFields(self):
         """(Postagem de Artigo) Adiciona campos necessarios e desabilita os outros radio buttons
@@ -443,6 +445,7 @@ class Layouts:
             self.newLayout.removeItem(self.txtImg)
         if (self.imgImg.count() > 0):
             self.newLayout.removeItem(self.imgImg)
+
 
     def loadImagensFields(self):
         """(Postagem com Imagens) Adiciona campos necessarios e desabilita os outros radio buttons
@@ -478,6 +481,7 @@ class Layouts:
         if (self.linkUrl.count() > 0):
             self.newLayout.removeItem(self.linkUrl)
 
+
     def imageCheck(self):
         """Printa a imagem selecionada na tela
         """
@@ -486,6 +490,7 @@ class Layouts:
             self.imgLbl.setPixmap(pxImg.scaled(
                 200, 200, Qt.AspectRatioMode.KeepAspectRatio))
             self.newLayout.addRow(self.imgLbl)
+
 
     def definePostType(self):
         """Define o tipo de popst selecionado
@@ -496,6 +501,7 @@ class Layouts:
             self.postTye = "Imagem"
         if (self.radio3.isChecked()):
             self.postTye = "Artigo"
+
 
     def validationMessages(self):
         """Insere (e remove) as mensagens de validacao dos campos na tela
@@ -524,6 +530,7 @@ class Layouts:
                 self.imagem.setText(
                     "Caminho da Imagem: <span style='font-size: small;color: darkgrey'>com extensão</span>")
 
+
     def validateFields(self):
         """Valida os campos preenchidos e define as variaveis para o request
         """
@@ -548,6 +555,7 @@ class Layouts:
             self.aguardeLbl.setText("Preencha todos os campos necessarios")
             self.body = {}
 
+
     def setarAguardeLbl(self, newText):
         """Define o texto da ultima label da tela e
             desabilita o botao de "Potar"
@@ -558,9 +566,8 @@ class Layouts:
         self.aguardeLbl.setText(newText)
         self.btnPostar.setEnabled(True)
 
+
     def retornarBody(self):
         return self.body
 
-    # endregion
-
-
+    #endregion
