@@ -3,6 +3,12 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QWidget
 
 
+"""
+Code from geeksforgeeks
+PyQt5 – Scrollable Label
+https://www.geeksforgeeks.org/pyqt5-scrollable-label/
+"""
+
 # class for scrollable label
 class ScrollLabel(QScrollArea):
 

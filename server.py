@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 class ServerMethods:
 
     def __init__(self, URL, token):
@@ -19,8 +20,7 @@ class ServerMethods:
         authHeader = {"Authorization": "Bearer " + self.token}
         extraInfo = {
             "projection": "(id,firstName,lastName,profilePicture(displayImage~:playableStreams))"}
-        r = requests.get(url=self.URL + "/me",
-                         headers=authHeader, params=extraInfo)
+        r = requests.get(url=self.URL + "/me", headers=authHeader, params=extraInfo)
         return r.json()
 
 
@@ -42,7 +42,7 @@ class ServerMethods:
         """Obtem o identificador da pessoa autenticada com o token
 
         Returns:
-            string: identificador
+            string: identificador do usuario
         """
         resp = self.getPersonBasicInfo()
         resp = json.dumps(resp, indent=4)
@@ -133,6 +133,11 @@ class ServerMethods:
 
 
     def registrarImagem(self):
+        """Registra a imagem para ser postada
+
+        Returns:
+            string: Retorno do request (sucesso ou falha)
+        """
         authHeader = {"Authorization": "Bearer " + self.token}
         postBody = {
             "registerUploadRequest": {
@@ -149,8 +154,7 @@ class ServerMethods:
             }
         }
         extraInfo = {"action": "registerUpload"}
-        r = requests.post(self.URL + "/assets", params=extraInfo,
-                          headers=authHeader, json=postBody)
+        r = requests.post(self.URL + "/assets", params=extraInfo, headers=authHeader, json=postBody)
         jsonRetorno = r.json()
         jsonRetorno = json.dumps(jsonRetorno)
         jsonRetorno = json.loads(jsonRetorno)
@@ -165,6 +169,14 @@ class ServerMethods:
 
 
     def postImagem(self, imgPath):
+        """Posta a imagem local no espaco reservado com o registro
+
+        Args:
+            imgPath (string): caminho relativo da imagem a ser enviada
+
+        Returns:
+            string: Retorno do request (sucesso ou falha)
+        """
         r = self.registrarImagem()
         if ("Erro" in r):
             return r
@@ -180,8 +192,19 @@ class ServerMethods:
 
 
     def postComImagem(self, imgPath, conteudo, visibility, altImg, mediaTxt):
-        authHeader = {"Authorization": "Bearer " +
-                      self.token, 'Content-Type': 'application/json'}
+        """Faz o POST de uma publicacao com Imagem
+
+        Args:
+            imgPath (string): Caminho local do arquivo de imagem
+            conteudo (string): Conteudo do post (texto)
+            visibility (string): Visibiliade do post (publico ou para conexoes)
+            altImg (string): Texto alternativo da imagem postada
+            mediaTxt (string): Descricao da imagem
+
+        Returns:
+            string: Mensagem de erro ou o ID da publicacao, em caso de sucesso
+        """
+        authHeader = {"Authorization": "Bearer " + self.token, 'Content-Type': 'application/json'}
         saida = self.postImagem(imgPath)
         if ("Erro" in saida):
             return saida
@@ -210,8 +233,7 @@ class ServerMethods:
                 }
             }
             print('BODY - ', json.dumps(postBody, indent=4))
-            r = requests.post(self.URL + "/ugcPosts",
-                              headers=authHeader, json=postBody)
+            r = requests.post(self.URL + "/ugcPosts", headers=authHeader, json=postBody)
             if (r.status_code != 201):
                 return "Erro: " + r.text
             else:

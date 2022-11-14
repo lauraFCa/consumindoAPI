@@ -12,8 +12,13 @@ class Layouts:
     clearStyle = "font-size: small; color: rgba(0, 0, 0, .6)"
     titleStyle = "font-size: large; font-weight: bold"
 
-    #region Janela de Splash
     def setSplashJanela(self, thisWindow, iniciar):
+        """Layout da primeira janela do sistema
+
+        Args:
+            thisWindow (PyQt6 Window): Splash Janela
+            iniciar (function): Method to call next window
+        """
         thisWindow.setWindowTitle("Autenticação")
         formLayout = QFormLayout()  # layout principal da janela
         
@@ -30,12 +35,13 @@ class Layouts:
         formLayout.addRow(btnIniciar)
         thisWindow.setLayout(formLayout)
 
-    #endregion
-
-
     # region Janela Principal
     def setPrincipalLayout(self, thisWindow, checkToken):
-        """Cria o layout desta janela (principal)
+        """Layout da janela principal
+
+        Args:
+            thisWindow (PyQt6 Window): Splash Janela
+            checkToken (function): Method to validate if inputed token is valid
         """
         thisWindow.setWindowTitle("Autenticação")
         formLayout = QFormLayout()  # layout principal da janela
@@ -77,7 +83,14 @@ class Layouts:
 
     # region Janela de Opcoes
     def setOpcoesLayout(self, thisWindow, openDadosPessoais, openPublicacoes, token, voltar):
-        """Cria o layout desta janela (opções)
+        """Layout da Janela com Opcoes
+
+        Args:
+            thisWindow (PyQt6 Window): Janela de opcoes
+            openDadosPessoais (function): Metodo para abrir a janela de GET Dados
+            openPublicacoes (function): Metodo para abrir a janela de POST publicacoes
+            token (string): Token inserido pelo usuario na tela anterior
+            voltar (function): Funcao para retornar a pagina anterior
         """
         self.tk = token
         thisWindow.setWindowTitle("Ações")
@@ -131,7 +144,16 @@ class Layouts:
 
     # region Janela dos Dados Pessoais
     def setDadosLayout(self, thisWindow, getDadosPessoais, getMaisDados, inicializarCampos1, inicializarCampos2, mostrarJson, voltar):
-        """Cria o layout desta janela (dados pessoais)
+        """Criar layout da janela de Obtencao de Dados 
+
+        Args:
+            thisWindow (PyQt6 Window): Janela de Dados
+            getDadosPessoais (function): GET dados do usuario
+            getMaisDados (function): GET dados extras do usuario
+            inicializarCampos1 (function): Inicializa os campos para os dados pessoais
+            inicializarCampos2 (function): Inicializa os campos mais dados pessoais
+            mostrarJson (function): Printa o json recebido na tela
+            voltar (function): Funcao para voltar a tela anterior
         """
         thisWindow.setWindowTitle("Dados pessoais")
         formLayout = QFormLayout()
@@ -183,6 +205,11 @@ class Layouts:
         thisWindow.setLayout(formLayout)
 
     def setarValores1NaTela(self, infosP):
+        """Seta os valores obtidos do request de dados na tela
+
+        Args:
+            infosP (json): Resultado do primeiro request
+        """
         self.labelsDoResultado1[0].setText(f"<h3>Dados</h3>")
 
         self.Id = infosP["id"]
@@ -225,11 +252,23 @@ class Layouts:
         self.languageInLastName = self.preferredLocaleinLastName["language"]
 
     def getAndSetImageFromURL(self, imgLabel, imgPixMap, imageURL):
+        """Adiciona a imagem de perfil recebida no request a tela
+
+        Args:
+            imgLabel (QLabel): Elemento onde a imagem ira entrar
+            imgPixMap (QPixmap): Elemento de Imagem
+            imageURL (string): URL da imagem de perfil, retornada no request
+        """
         request = requests.get(imageURL)
         imgPixMap.loadFromData(request.content)
         imgLabel.setPixmap(imgPixMap)
 
     def setarValores2NaTela(self, maisInfos):
+        """Seta os valores obtidos do request de dados extras na tela
+
+        Args:
+            infosP (json): Resultado do primeiro request
+        """
         profPic = maisInfos["profilePicture"]
         dispImg = profPic["displayImage~"]
         self.elements = dispImg["elements"]
@@ -276,6 +315,13 @@ class Layouts:
     # region Janela de Publicacoes
 
     def setarPubLayout(self, thisWindow, getDataAndPost, voltar):
+        """Layout da janela de Publicacoes
+
+        Args:
+            thisWindow (PyQt6 Window): Janela de criar Publicacoes
+            getDataAndPost (function): Metodo para pegar os valores da tela e fazer o request
+            voltar (function): Metodo para voltar a tela anterior
+        """
         self.theW = thisWindow
         self.selectedVisibility, self.postTye = "PUBLIC", ""
         thisWindow.setWindowTitle("Criar nova Publicação")
@@ -359,16 +405,25 @@ class Layouts:
         thisWindow.setLayout(self.formLayout)
 
     def selecionado(self, index):
+        """Identifica a visibilidade do post selecionado
+
+        Args:
+            index (int): Index do item selecionado
+        """
         if (index == 1):
             self.selectedVisibility = "CONNECTIONS"
         if (index == 0):
             self.selectedVisibility = "PUBLIC"
 
     def loadSimpleFields(self):
+        """(Postagem Simnples) Adiciona campos necessarios e desabilita os outros radio buttons
+        """
         self.radio2.setCheckable(False)
         self.radio3.setCheckable(False)
 
     def loadArtigoFields(self):
+        """(Postagem de Artigo) Adiciona campos necessarios e desabilita os outros radio buttons
+        """
         self.radio1.setCheckable(False)
         self.radio2.setCheckable(False)
 
@@ -390,6 +445,8 @@ class Layouts:
             self.newLayout.removeItem(self.imgImg)
 
     def loadImagensFields(self):
+        """(Postagem com Imagens) Adiciona campos necessarios e desabilita os outros radio buttons
+        """
         self.radio1.setCheckable(False)
         self.radio3.setCheckable(False)
 
@@ -422,6 +479,8 @@ class Layouts:
             self.newLayout.removeItem(self.linkUrl)
 
     def imageCheck(self):
+        """Printa a imagem selecionada na tela
+        """
         if (self.imgPath.text() != ""):
             pxImg = QPixmap(self.imgPath.text())
             self.imgLbl.setPixmap(pxImg.scaled(
@@ -429,6 +488,8 @@ class Layouts:
             self.newLayout.addRow(self.imgLbl)
 
     def definePostType(self):
+        """Define o tipo de popst selecionado
+        """
         if (self.radio1.isChecked()):
             self.postTye = "Simples"
         if (self.radio2.isChecked()):
@@ -437,6 +498,8 @@ class Layouts:
             self.postTye = "Artigo"
 
     def validationMessages(self):
+        """Insere (e remove) as mensagens de validacao dos campos na tela
+        """
         if (self.txtPub.toPlainText() == ""):
             self.labelConteudo.setText(
                 "Texto da publicação: <span style='color: red'>Preencha o conteudo da postagem!</span>")
@@ -462,6 +525,8 @@ class Layouts:
                     "Caminho da Imagem: <span style='font-size: small;color: darkgrey'>com extensão</span>")
 
     def validateFields(self):
+        """Valida os campos preenchidos e define as variaveis para o request
+        """
         self.definePostType()
         self.validationMessages()
         if ((self.txtPub.toPlainText() != "") and (self.postTye == "Artigo" and self.linkUrlIn.text() != "") or (self.postTye == "Imagem" and self.imgPath.text() != "") or (self.postTye == "Simples")):
@@ -484,6 +549,12 @@ class Layouts:
             self.body = {}
 
     def setarAguardeLbl(self, newText):
+        """Define o texto da ultima label da tela e
+            desabilita o botao de "Potar"
+
+        Args:
+            newText (string): Novo texto da label
+        """
         self.aguardeLbl.setText(newText)
         self.btnPostar.setEnabled(True)
 
@@ -491,3 +562,5 @@ class Layouts:
         return self.body
 
     # endregion
+
+
