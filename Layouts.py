@@ -1,4 +1,4 @@
-import requests
+import requests, os
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from ScrollLabel import ScrollLabel
@@ -11,6 +11,27 @@ class Layouts:
 
     clearStyle = "font-size: small; color: rgba(0, 0, 0, .6)"
     titleStyle = "font-size: large; font-weight: bold"
+
+    #region Janela de Splash
+    def setSplashJanela(self, thisWindow, iniciar):
+        thisWindow.setWindowTitle("Autenticação")
+        formLayout = QFormLayout()  # layout principal da janela
+        
+        imgLbl = QLabel()
+        pxImg = QPixmap(os.path.join("imgs","integracaoSft.png"))
+        imgLbl.setPixmap(pxImg.scaled(490, 490, Qt.AspectRatioMode.KeepAspectRatio))
+        imgLbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        btnIniciar = QPushButton("Iniciar")
+        btnIniciar.clicked.connect(iniciar)
+        
+        formLayout.addRow(QLabel("<h2>Trabalho desenvolvido para disciplina de Integração de Softesre - UniAcademia</h2>"))
+        formLayout.addRow(imgLbl)
+        formLayout.addRow(btnIniciar)
+        thisWindow.setLayout(formLayout)
+
+    #endregion
+
 
     # region Janela Principal
     def setPrincipalLayout(self, thisWindow, checkToken):

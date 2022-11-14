@@ -3,13 +3,15 @@
 Requisições com a biblioteca _requests_  
 Interface utilizando o PyQt6
 
-## LinkedIn
+## Referênicas e Pré-requisitos
 
-[Documentação da API](https://learn.microsoft.com/pt-br/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin)
+### LinkedIn
+
+[Documentação da API](https://learn.microsoft.com/pt-br/linkedin/)
 
 Necessário ter uma _company page_ para solicitar uso da API.
 
-## Requests
+### Requests
 
 Requisições: Utilizam a biblioteca _requests_  
 [Documentação](https://pypi.org/project/requests/)  
@@ -21,7 +23,7 @@ Trabalhando com o JSON:
 [Working with JSON in Python](https://datagy.io/python-requests-json/)  
 [Parse a JSON response using Python requests library](https://pynative.com/parse-json-response-using-python-requests-library/)
 
-## Interface
+### Interface
 
 PyQt6: Biblioteca para construção de interfaces gráficas com Python
 
@@ -31,7 +33,7 @@ PyQt6: Biblioteca para construção de interfaces gráficas com Python
 [Creating your first app with PyQt6](https://www.pythonguis.com/tutorials/pyqt6-creating-your-first-window/)  
 [Python and PyQt: Building a GUI Desktop Calculator](https://realpython.com/python-pyqt-gui-calculator/)
 
-## Pacotes
+### Pacotes
 
 | Package            | Version   |
 | ------------------ | --------- |
@@ -48,3 +50,24 @@ PyQt6: Biblioteca para construção de interfaces gráficas com Python
 | setuptools         | 65.5.0    |
 | tomli              | 2.0.1     |
 | urllib3            | 1.26.12   |
+
+## Sistema desenvolvido
+
+![Sistema desenvolvido](imgs/integracaoSft.png)
+
+Para usar o sistema é necessário já ter um token de autenticação para API do LinkedIn.  
+As ações disponiveis são as autorizadas pela API do LinkedIn:  
+![LinkedIn API](imgs/linkedinProducts.png)
+
+Os escopos são: Obter os dados do usuário autenticado e Criar uma nova publicação de um dos três tipos possiveis (simples, com um link ou com uma imagem)
+
+**Publicação Simples**  
+![Simples](imgs/pubSimples.png)
+
+
+**Publicação de Imagem**  
+![Simples](imgs/imgPub.png)
+
+
+**Publicação com Link**  
+![Simples](imgs/linkPub.png)

@@ -11,6 +11,23 @@ ly = Layouts()
 url = "https://api.linkedin.com/v2"
 
 
+
+class SplashScreen(QWidget):
+
+    def __init__(self):
+        """Janela principal
+        """
+        super().__init__()
+        self.setMinimumSize(windowsSize[0], windowsSize[1])
+        ly.setSplashJanela(self, self.iniciar)
+
+    def iniciar(self):
+        self.mw = MainWindow()
+        self.mw.setMinimumSize(windowsSize[0], windowsSize[1])
+        self.mw.show()
+        self.hide()
+
+
 class MainWindow(QWidget):
 
     def __init__(self):
@@ -211,6 +228,6 @@ class CriarPublicacoes(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    mainW = MainWindow()
+    mainW = SplashScreen()
     mainW.show()
     sys.exit(app.exec())
