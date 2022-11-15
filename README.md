@@ -1,7 +1,7 @@
 # Consumindo API do LinkedIn com Python
 
 Requisições com a biblioteca _requests_  
-Interface utilizando o PyQt6
+Interface utilizando o *PyQt6*
 
 ## Referênicas e Pré-requisitos
 
@@ -67,4 +67,10 @@ Os escopos são: Obter os dados do usuário autenticado e Criar uma nova publica
 ![Simples](imgs/linkPub.png)
 
 Prints do Sistema:  
-![Sistema desenvolvido](imgs/integracaoSft.png)
+![Sistema desenvolvido](data/integracaoSft.png)
+
+<!-- 
+Comando para gerar o executável:  
+```
+pyinstaller --noconsole Janelas.py --icon='data/linkApi.ico' --add-data 'data/linkApi.ico;data' --add-data 'data/integracaoSft.png;data'
+``` -->

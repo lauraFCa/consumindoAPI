@@ -19,19 +19,23 @@ class Layouts:
             thisWindow (PyQt6 Window): Splash Janela
             iniciar (function): Method to call next window
         """
-        thisWindow.setWindowTitle("Autenticação")
+        thisWindow.setWindowTitle("Splash Screen")
         formLayout = QFormLayout()  # layout principal da janela
         
         imgLbl = QLabel()
-        pxImg = QPixmap(os.path.join("imgs","integracaoSft.png"))
-        imgLbl.setPixmap(pxImg.scaled(490, 490, Qt.AspectRatioMode.KeepAspectRatio))
+        pxImg = QPixmap(os.path.join("data","integracaoSft.png"))
+        imgLbl.setPixmap(pxImg.scaled(450, 450, Qt.AspectRatioMode.KeepAspectRatio))
         imgLbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         btnIniciar = QPushButton("Iniciar")
         btnIniciar.clicked.connect(iniciar)
         
-        formLayout.addRow(QLabel("<h2>Trabalho desenvolvido para disciplina de Integração de Softesre - UniAcademia</h2>"))
+        titulo = QLabel("<p style='font-size: x-large; font-weight: 800'>Trabalho desenvolvido para disciplina de Integração de Software - UniAcademia</p><br>")
+        titulo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        formLayout.addRow(titulo)
         formLayout.addRow(imgLbl)
+        formLayout.addRow(QLabel("<br>"))
         formLayout.addRow(btnIniciar)
         thisWindow.setLayout(formLayout)
 
@@ -343,8 +347,8 @@ class Layouts:
         radioBtnLayout.addWidget(self.radio3)
         # endsubregion
 
-        comboBxPrivacidade = QComboBox()
-        comboBxPrivacidade.addItems(['PUBLIC', 'CONNECTIONS'])
+        self.comboBxPrivacidade = QComboBox()
+        self.comboBxPrivacidade.addItems(['PUBLIC', 'CONNECTIONS'])
 
         self.labelConteudo = QLabel("Texto da publicação:")
         self.txtPub = QPlainTextEdit()
@@ -392,7 +396,7 @@ class Layouts:
         self.formLayout.addRow(radioBtnLayout)
         self.formLayout.addRow(vert)
         self.formLayout.addRow(
-            "Visibilidade da Publicação: ", comboBxPrivacidade)
+            "Visibilidade da Publicação: ", self.comboBxPrivacidade)
         self.formLayout.addRow(QLabel(
             "<span style='font-size: small'>Selecionando a opção 'Connections' é necessário estar na rede do usuário para visualizar o post"))
         self.formLayout.addRow(self.labelConteudo)
@@ -404,16 +408,10 @@ class Layouts:
         thisWindow.setLayout(self.formLayout)
 
 
-    def selecionado(self, index):
+    def selecionado(self):
         """Identifica a visibilidade do post selecionado
-
-        Args:
-            index (int): Index do item selecionado
         """
-        if (index == 1):
-            self.selectedVisibility = "CONNECTIONS"
-        if (index == 0):
-            self.selectedVisibility = "PUBLIC"
+        self.selectedVisibility = self.comboBxPrivacidade.currentText()
 
 
     def loadSimpleFields(self):
@@ -456,18 +454,25 @@ class Layouts:
         self.imgAlt.addWidget(QLabel("Texto alternativo da imagem: "))
         self.imgAlt.addWidget(self.imgAlttxt)
 
-        self.txtImg.addWidget(QLabel("Texto da Imagem: "))
+        self.txtImg.addWidget(QLabel("Descrição da Imagem: "))
         self.txtImg.addWidget(self.mediaTxt)
 
+        vert = QVBoxLayout()
+        hor = QHBoxLayout()
+        
         self.imagem = QLabel(
-            "Caminho da Imagem: <span style='font-size: small;color: darkgrey'>com extensão</span>")
+            "Caminho completo da Imagem: <span style='font-size: small;color: darkgrey'>com extensão  </span>")
 
         btnCheckImg = QPushButton("Check Image")
         btnCheckImg.adjustSize()
         btnCheckImg.clicked.connect(self.imageCheck)
 
-        self.imgImg.addWidget(self.imagem)
-        self.imgImg.addWidget(self.imgPath)
+        hor.addWidget(self.imgPath)
+        hor.addWidget(btnCheckImg)
+        vert.addWidget(self.imagem)
+        vert.addItem(hor)
+        
+        self.imgImg.addItem(vert)
         self.imgImg.addWidget(btnCheckImg)
 
         self.newLayout.addRow(self.imgAlt)
@@ -525,7 +530,7 @@ class Layouts:
         if (self.postTye == "Imagem"):
             if (self.imgPath.text() == ""):
                 self.imagem.setText(
-                    "Caminho da Imagem: <span style='font-size: small;color: darkgrey'>com extensão</span><span style='color: red'>Obrigatório!</span>")
+                    "Caminho completo da Imagem: <span style='font-size: small;color: darkgrey'>com extensão  </span><span style='color: red'>Obrigatório!</span>")
             else:
                 self.imagem.setText(
                     "Caminho da Imagem: <span style='font-size: small;color: darkgrey'>com extensão</span>")
@@ -536,23 +541,27 @@ class Layouts:
         """
         self.definePostType()
         self.validationMessages()
-        if ((self.txtPub.toPlainText() != "") and (self.postTye == "Artigo" and self.linkUrlIn.text() != "") or (self.postTye == "Imagem" and self.imgPath.text() != "") or (self.postTye == "Simples")):
-            self.body = {
-                "postType": self.postTye,
-                "visibility": self.selectedVisibility,
-                "conteudo": self.txtPub.toPlainText(),
-                "imageUrl": self.imgPath.text(),
-                "altImg": self.imgAlttxt.text(),
-                "mediaTxt": self.mediaTxt.text(),
-                "tituloLink": self.tituloLink.text(),
-                "urlLinkPost": self.linkUrlIn.text(),
-            }
-            self.aguardeLbl.setText(
-                "<b>Aguarde a criação da sua publicação!</b>")
-            self.btnPostar.setEnabled(False)
-            self.formLayout.addRow(self.aguardeLbl)
+        if(self.txtPub.toPlainText() != ""):
+            self.selecionado()
+            if ((self.postTye == "Artigo" and self.linkUrlIn.text() != "") or (self.postTye == "Imagem" and self.imgPath.text() != "") or (self.postTye == "Simples")):
+                self.body = {
+                    "postType": self.postTye,
+                    "visibility": self.selectedVisibility,
+                    "conteudo": self.txtPub.toPlainText(),
+                    "imageUrl": self.imgPath.text(),
+                    "altImg": self.imgAlttxt.text(),
+                    "mediaTxt": self.mediaTxt.text(),
+                    "tituloLink": self.tituloLink.text(),
+                    "urlLinkPost": self.linkUrlIn.text(),
+                }
+                self.aguardeLbl.setText(
+                    "<b>Aguarde a criação da sua publicação!</b>")
+                self.btnPostar.setEnabled(False)
+                self.formLayout.addRow(self.aguardeLbl)
+            else:
+                self.aguardeLbl.setText("Preencha todos os campos necessarios")
+                self.body = {}
         else:
-            self.aguardeLbl.setText("Preencha todos os campos necessarios")
             self.body = {}
 
 

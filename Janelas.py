@@ -1,10 +1,17 @@
 import json
 import sys
+import os
+from PyQt6 import QtGui
 from PyQt6.QtWidgets import QApplication, QLabel, QWidget
 from Layouts import Layouts
 from server import ServerMethods
 
-windowsSize = 640, 500
+# make Windows show icon on taskbar
+import ctypes
+myappid = 'personal.school.integration.3' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+windowsSize = 900, 600
 ly = Layouts()
 url = "https://api.linkedin.com/v2"
 
@@ -14,6 +21,7 @@ class SplashScreen(QWidget):
     def __init__(self):
         super().__init__()
         self.setMinimumSize(windowsSize[0], windowsSize[1])
+        self.setWindowIcon(QtGui.QIcon(os.path.join("data", "linkApi.ico")))
         ly.setSplashJanela(self, self.iniciar)
 
     def iniciar(self):
@@ -32,6 +40,7 @@ class MainWindow(QWidget):
         """
         super().__init__()
         self.setMinimumSize(windowsSize[0], windowsSize[1])
+        self.setWindowIcon(QtGui.QIcon(os.path.join("data", "linkApi.ico")))
         ly.setPrincipalLayout(self, self.checkToken)
         self.token = ''
 
@@ -55,6 +64,7 @@ class OptionsWindow(QWidget):
         """Janela com opcoes de acao
         """
         super().__init__()
+        self.setWindowIcon(QtGui.QIcon(os.path.join("data", "linkApi.ico")))
         self.token = tk
         ly.setOpcoesLayout(self, self.openDadosPessoais, self.openPublicacoes, self.token, self.voltar)
 
@@ -89,6 +99,7 @@ class DadosPessoais(QWidget):
         super().__init__()
         self.setMinimumSize(windowsSize[0], windowsSize[1])
         self.labelsInicializados = self.inicializarCampos()
+        self.setWindowIcon(QtGui.QIcon(os.path.join("data", "linkApi.ico")))
         ly.setDadosLayout(self, self.getDadosPessoais, self.getMaisDados, self.labelsInicializados[0], self.labelsInicializados[1], self.printJason, self.voltar)
         self.token, self.resp, self.jsonCompleto = tk, 0, ""
         self.sm = ServerMethods(url, self.token)
@@ -161,8 +172,8 @@ class CriarPublicacoes(QWidget):
     def __init__(self, tk):
         super().__init__()
         self.setMinimumSize(windowsSize[0], windowsSize[1])
-        #self.labelsInicializados = self.inicializarCampos()
         ly.setarPubLayout(self, self.getDataAndPost, self.voltar)
+        self.setWindowIcon(QtGui.QIcon(os.path.join("data", "linkApi.ico")))
         self.token, self.resp, self.jsonCompleto = tk, 0, ""
         self.sm = ServerMethods(url, self.token)
 
@@ -247,6 +258,7 @@ class CriarPublicacoes(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon(os.path.join("data", "imgs.png")))
     splashS = SplashScreen()
     splashS.show()
     sys.exit(app.exec())
