@@ -50,11 +50,11 @@ Também é necessário instalar as bibliotecas *requests* e *pyqt6*
 
 **Para executar, basta rodar apenas o arquivo *Janelas.py***
 
-As ações disponiveis são as autorizadas pela API do LinkedIn:  
-![LinkedIn API](imgs/linkedinProducts.png)
+As ações disponiveis são as autorizadas pela API do LinkedIn.
+<!-- ![LinkedIn API](imgs/linkedinProducts.png) -->
 
 Os escopos são: Obter os dados do usuário autenticado e Criar uma nova publicação de um dos três tipos possiveis (simples, com um link ou com uma imagem)
-
+<!--
 **Publicação Simples**  
 ![Simples](imgs/pubSimples.png)
 
@@ -65,6 +65,7 @@ Os escopos são: Obter os dados do usuário autenticado e Criar uma nova publica
 
 **Publicação com Link**  
 ![Simples](imgs/linkPub.png)
+-->
 
 Prints do Sistema:  
 ![Sistema desenvolvido](data/integracaoSft.png)
